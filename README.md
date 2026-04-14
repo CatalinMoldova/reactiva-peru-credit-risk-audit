@@ -75,6 +75,4 @@ Run the `.ipynb` file in any Jupyter environment to see the replication and stat
 
 This project was completed in December 2025 as part of the **Machine Learning and Computational Statistics** course at **New York University**.
 
----
 
-**Would you like me to generate a specific `License` file (like MIT or Apache) to add to the repo as well?**
