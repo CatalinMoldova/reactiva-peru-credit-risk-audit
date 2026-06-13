@@ -1,78 +1,145 @@
+# Credit Risk Model Audit: Reactiva Perú
 
+Replication and methodological audit of machine learning models used for credit-risk prediction in the Reactiva Perú government-backed loan program.
 
-# Replication & Critique: ML for Credit Risk in the Reactiva Peru Program
+This project replicates and extends the study *“Machine Learning for Credit Risk in the Reactiva Peru Program: A Comparison of the Lasso and Ridge Regression Models”* by Geraldo-Campos et al. The original paper compares OLS, Lasso, and Ridge regression for predicting credit-risk levels among firms that received loans under the Reactiva Perú COVID-19 relief program.
 
-This repository contains a full replication and methodological critique of the study **"Machine Learning for Credit Risk in the Reactiva Peru Program: A Comparison of the Lasso and Ridge Regression Models"** by Geraldo-Campos et al. (2022).
+My contribution goes beyond replication: I identify and validate a target-leakage issue showing that the risk target is mechanically linked to one of the input variables, making the prediction task less meaningful than it first appears.
 
----
+## Project Summary
 
-## 📌 Project Highlights
+The original study reports that Lasso slightly outperforms Ridge for predicting credit-risk level. After reproducing the modelling pipeline, I extended the analysis with statistical tests and non-linear models to examine whether the target variable was truly being predicted from meaningful business features.
 
-* **Critical Discovery**: Diagnosed a fundamental **target leakage** flaw in the original experimental design where the credit risk target was mechanically derived from a primary regressor.
-* **Statistical Rigor**: Validated the flaw using **Kruskal-Wallis tests** () and **Random Forest** models ().
-* **Large-Scale Data**: Processed a dataset of **500,000+ SME loan records** from the Peruvian government's COVID-19 relief program.
+The key finding is that the target variable, `risk_level`, appears to be almost entirely determined by `covered_amount`. A Random Forest model recovers this relationship almost perfectly, while feature-importance analysis shows that `covered_amount` dominates the prediction signal.
 
----
+## Why This Project Matters
 
-## 🛠️ Technical Implementation
+Credit-risk models are used in banking, public policy, and financial decision-making. A model can appear accurate while learning a shortcut caused by data leakage or target construction. This project demonstrates why model validation must go beyond performance metrics.
 
-### Core Replication
+The main lesson is:
 
-* **Models**: Re-implemented **OLS, Lasso, and Ridge** regressions in Python.
-* **Optimization**: Automated hyperparameter tuning using `LassoCV` and `RidgeCV`, comparing results against the fixed alphas used in the original paper.
-* **Pipeline**: Built a robust preprocessing workflow including ordinal encoding for categorical variables (economic sector, lending entity) and `MinMaxScaler` normalization.
+> A model is not useful just because it predicts well. We must also verify that it is learning a real economic relationship rather than a mechanical rule embedded in the data.
 
-### Methodological Extension
+## Research Question
 
-The replication revealed that linear models achieved a weak . I extended the study to investigate this bottleneck:
+Can Lasso and Ridge regression meaningfully predict credit-risk level in the Reactiva Perú dataset, or is the target variable mechanically determined by one of the regressors?
 
-1. **Leakage Diagnosis**: Proved the "Risk Level" was determined solely by "Covered Amount" quartiles.
-2. **Non-Linear Validation**: Deployed **Random Forests** to test if the underlying rule could be recovered. The model achieved a perfect , confirming the deterministic relationship.
-3. **Feature Importance**: Visualized that "Covered Amount" provided nearly 100% of the predictive power, rendering other regressors virtually obsolete.
+## Methods
 
----
+### 1. Replication
 
-## 📊 Key Results Summary
+I replicated the original modelling approach using:
 
-| Model | RMSE |  | Note |
-| --- | --- | --- | --- |
-| **Lasso (Optimal)** | 0.35660 | 0.08232 | Replicated Weak Performance |
-| **Ridge (Optimal)** | 0.35661 | 0.08231 | Replicated Weak Performance |
-| **Random Forest** | **0.00007** | **1.00000** | **Confirmed Target Leakage** |
+* OLS regression
+* Lasso regression
+* Ridge regression
+* MinMax scaling
+* Ordinal encoding of categorical variables
+* Train/test split evaluation
+* Cross-validated alpha selection with `LassoCV` and `RidgeCV`
 
----
+### 2. Methodological Audit
 
-## 📁 Repository Structure
+I then extended the analysis to test for leakage:
 
-* `MLCS_project.pdf`: Comprehensive academic paper detailing the replication and findings.
-* `Notebooks/`: Contains the primary Jupyter Notebook with data cleaning, statistical tests, and modeling.
-* `References/`: Links to the original study and Peruvian government datasets.
+* Checked whether `risk_level` was derived from `covered_amount` thresholds
+* Compared model performance across linear and non-linear models
+* Used Random Forests to test whether the underlying target rule could be recovered
+* Examined feature importance to identify dominant predictors
+* Used statistical tests to compare the distribution of covered amounts across risk groups
 
----
+## Dataset
 
-## 🚀 How to Run
+The dataset contains firm-level records from the Reactiva Perú program, including:
 
-1. **Clone the repo**:
-```bash
-git clone https://github.com/CatalinMoldova/Replication-and-Extension-of-Linear-Regressor-of-the-Reactiva-program-in-Peru.git
+* Economic sector
+* Lending institution
+* Department / region
+* Covered loan amount
+* Constructed credit-risk level
 
+The full public dataset contains more than 500,000 SME loan records.
+
+## Key Results
+
+| Model         |    RMSE |      R² | Interpretation                             |
+| ------------- | ------: | ------: | ------------------------------------------ |
+| Lasso         | 0.35660 | 0.08232 | Weak predictive performance                |
+| Ridge         | 0.35661 | 0.08231 | Similar to Lasso                           |
+| Random Forest | 0.00007 | 1.00000 | Confirms deterministic target relationship |
+
+## Main Finding
+
+The Random Forest model achieves near-perfect performance because the target can be inferred almost entirely from `covered_amount`.
+
+This suggests that the original prediction task may suffer from target leakage: the model is not discovering a complex credit-risk pattern, but instead recovering a rule used to construct the target.
+
+## Visual Results
+
+The repository includes:
+
+* Model comparison chart
+* Feature-importance plot
+* Risk level vs. covered amount visualization
+* Methodology diagram explaining the replication and leakage-audit pipeline
+
+## Technical Stack
+
+* Python
+* Pandas
+* NumPy
+* scikit-learn
+* Matplotlib
+* Seaborn
+* SciPy
+* Jupyter Notebook
+
+## Repository Structure
+
+```text
+src/            Reusable Python scripts for cleaning, training, and diagnostics
+notebooks/      Main reproducible analysis notebook
+data/           Data instructions and sample data
+results/        Model metrics, statistical tests, and feature-importance outputs
+assets/         Figures used in the README and portfolio case study
+report/         Full written report
+presentation/   Project presentation slides
 ```
 
+## How to Run
 
-2. **Install dependencies**:
+Install dependencies:
+
 ```bash
-pip install scikit-learn pandas numpy matplotlib seaborn scipy
-
+pip install -r requirements.txt
 ```
 
+Run the notebook:
 
-3. **Execute the notebook**:
-Run the `.ipynb` file in any Jupyter environment to see the replication and statistical proofs.
+```bash
+jupyter notebook notebooks/reactiva_peru_credit_risk_audit.ipynb
+```
 
----
+Or run the scripts:
 
-## 🎓 Academic Context
+```bash
+python src/train_linear_models.py
+python src/leakage_diagnostics.py
+python src/random_forest_validation.py
+```
 
-This project was completed in December 2025 as part of the **Machine Learning and Computational Statistics** course at **New York University**.
+## Portfolio Takeaway
 
+This project demonstrates:
 
+* ML model replication
+* Credit-risk modelling
+* Data leakage diagnosis
+* Regression and regularization
+* Random Forest validation
+* Statistical model criticism
+* Reproducible data science workflow
+
+## Project Origin
+
+This project was developed as part of a Machine Learning and Computational Statistics course at New York University and later refactored into a portfolio-ready model validation case study.
