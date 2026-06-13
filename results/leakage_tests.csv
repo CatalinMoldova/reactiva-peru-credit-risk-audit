@@ -1,0 +1,3 @@
+test_name,statistic,p_value,conclusion,n_loans,n_groups
+kruskal_wallis_amount_by_institution,3142.989243712113,0.0,REJECT null hypothesis: amount and institution are dependent.,5000,25
+kruskal_wallis_amount_by_risk_level,4530.328199513308,0.0,REJECT null hypothesis: amount distributions differ across risk levels (expected because risk_level is derived from amount thresholds).,5000,4

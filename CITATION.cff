@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+title: "Reactiva Perú Credit Risk Model Audit"
+message: "If you use this repository, please cite it using these metadata."
+type: software
+authors:
+  - family-names: Botezat
+    given-names: Catalin
+repository-code: "https://github.com/catalinbotezat/reactiva-peru-credit-risk-audit"
+license: MIT
+keywords:
+  - credit risk
+  - machine learning
+  - data leakage
+  - model validation
+  - Reactiva Peru
+preferred-citation:
+  type: article
+  title: "Machine Learning for Credit Risk in the Reactiva Peru Program: A Comparison of the Lasso and Ridge Regression Models"
+  authors:
+    - family-names: Geraldo-Campos
+      given-names: "L. A."
