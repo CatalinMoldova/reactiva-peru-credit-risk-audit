@@ -76,12 +76,29 @@ This suggests that the original prediction task may suffer from target leakage: 
 
 ## Visual Results
 
-The repository includes:
+### Model Comparison
 
-* Model comparison chart
-* Feature-importance plot
-* Risk level vs. covered amount visualization
-* Methodology diagram explaining the replication and leakage-audit pipeline
+Linear models show weak predictive performance, while the Random Forest exposes the deterministic target relationship.
+
+![Linear model RMSE comparison](assets/model_comparison.png)
+
+### Feature Importance
+
+`covered_amount` dominates the prediction signal in the Random Forest model.
+
+![Random Forest feature importance](assets/feature_importance.png)
+
+### Risk Level vs. Covered Amount
+
+Risk level appears to be mechanically determined by loan amount thresholds.
+
+![Risk level by covered amount](assets/risk_level_by_amount.png)
+
+### Methodology
+
+Replication and leakage-audit pipeline used in this project.
+
+![Methodology diagram](assets/methodology_diagram.png)
 
 ## Technical Stack
 
@@ -97,13 +114,37 @@ The repository includes:
 ## Repository Structure
 
 ```text
-src/            Reusable Python scripts for cleaning, training, and diagnostics
-notebooks/      Main reproducible analysis notebook
-data/           Data instructions and sample data
-results/        Model metrics, statistical tests, and feature-importance outputs
-assets/         Figures used in the README and portfolio case study
-report/         Full written report
-presentation/   Project presentation slides
+reactiva-peru-credit-risk-audit/
+├── README.md
+├── src/
+│   ├── data_cleaning.py
+│   ├── train_linear_models.py
+│   ├── leakage_diagnostics.py
+│   ├── random_forest_validation.py
+│   └── config.py
+├── notebooks/
+│   └── reactiva_peru_credit_risk_audit.ipynb
+├── data/
+│   ├── sample/
+│   │   └── reactiva_peru_sample.csv
+│   └── README.md
+├── results/
+│   ├── model_performance.csv
+│   ├── leakage_tests.csv
+│   └── feature_importance.csv
+├── assets/
+│   ├── model_comparison.png
+│   ├── feature_importance.png
+│   ├── risk_level_by_amount.png
+│   └── methodology_diagram.png
+├── report/
+│   └── reactiva_peru_credit_risk_audit.pdf
+├── presentation/
+│   └── reactiva_peru_model_audit.pptx
+├── requirements.txt
+├── .gitignore
+├── LICENSE
+└── CITATION.cff
 ```
 
 ## How to Run
